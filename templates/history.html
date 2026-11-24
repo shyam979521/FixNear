@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}Work History — FixNear{% endblock %}
+
+{% block content %}
+<section class="section-tight">
+  <div class="shell">
+
+    <div class="section-head reveal is-visible" style="margin-bottom: 24px; text-align: left; max-width: none;">
+      <div class="eyebrow"><span class="dot"></span> Your history</div>
+      <h2>Work History</h2>
+      <p>Every job you've {{ 'completed or accepted' if user['role'] == 'worker' else 'posted' }}, all in one timeline.</p>
+    </div>
+
+    <div class="history-filter-row reveal is-visible">
+      <div class="search-shell" style="max-width: 320px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" placeholder="Search history…" data-live-filter="[data-history-list] .dash-card" data-live-filter-empty="history-empty">
+      </div>
+      <div class="filter-chip-row" data-status-filter-row style="margin-bottom: 0;">
+        <span class="filter-chip active" data-status-filter="all">All</span>
+        <span class="filter-chip" data-status-filter="open">Pending</span>
+        <span class="filter-chip" data-status-filter="accepted">Accepted</span>
+        <span class="filter-chip" data-status-filter="completed">Completed</span>
+        <span class="filter-chip" data-status-filter="cancelled">Cancelled</span>
+      </div>
+    </div>
+
+    {% if jobs %}
+    <div data-history-list>
+      {% for job in jobs %}
+      <div class="dash-card" data-history-status="{{ job['status']|lower }}" style="display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start;">
+        <div style="flex: 1; min-width: 240px;">
+          <div class="job-card-top" style="margin-bottom: 10px;">
+            <span class="job-category-tag">{{ job['category'] }}</span>
+            <span class="status-badge status-{{ job['status']|lower }}"><span class="dot"></span>{{ job['status'] }}</span>
+          </div>
+          <p style="margin-bottom: 10px;">{{ job['description'][:140] }}{% if job['description']|length > 140 %}…{% endif %}</p>
+          <div class="job-meta-row" style="margin-bottom: 0;">
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> {{ job['location'] }}</span>
+            {% if job['budget'] %}<span>{{ job['budget'] }}</span>{% endif %}
+            {% if user['role'] == 'worker' %}<span>{{ job['customer_name'] }}</span>{% elif job['worker_name'] %}<span>{{ job['worker_name'] }}</span>{% endif %}
+          </div>
+        </div>
+
+        <div style="min-width: 220px; flex: 0 0 220px;">
+          <div class="timeline-vertical" style="padding-left: 28px;">
+            <div class="tl-step done">
+              <div class="tl-dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+              <b>Posted</b><span>{{ job['created_at'][:10] }}</span>
+            </div>
+            <div class="tl-step {% if job['status'] in ['Accepted','Completed'] %}done{% elif job['status'] == 'Cancelled' %}{% else %}current{% endif %}">
+              <div class="tl-dot">{% if job['status'] in ['Accepted','Completed'] %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>{% endif %}</div>
+              <b>Accepted</b><span>{{ job['worker_name'] or '—' }}</span>
+            </div>
+            <div class="tl-step {% if job['status'] == 'Completed' %}done{% elif job['status'] == 'Accepted' %}current{% endif %}">
+              <div class="tl-dot">{% if job['status'] == 'Completed' %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>{% endif %}</div>
+              <b>Completed</b><span>{% if job['status'] == 'Completed' %}Done{% elif job['status'] == 'Cancelled' %}Cancelled{% else %}Pending{% endif %}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div id="history-empty" class="empty-state" style="display: none;">
+      <h3>No history items match</h3>
+    </div>
+    {% else %}
+    <div class="empty-state reveal is-visible">
+      <div class="icon-wrap" style="width: 96px; height: 96px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <h3>No history yet</h3>
+      <p>{% if user['role'] == 'worker' %}Accept your first job to start building your history.{% else %}Post your first job to see it show up here.{% endif %}</p>
+      <a href="{{ url_for('find_work') if user['role'] == 'worker' else url_for('post_work') }}" class="btn btn-accent btn-ripple">
+        {{ 'Find Work' if user['role'] == 'worker' else 'Post Work' }}
+      </a>
+    </div>
+    {% endif %}
+
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll('[data-status-filter]').forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      document.querySelectorAll('[data-status-filter]').forEach(function (c) { c.classList.remove('active'); });
+      chip.classList.add('active');
+      var status = chip.getAttribute('data-status-filter');
+      document.querySelectorAll('[data-history-status]').forEach(function (card) {
+        card.style.display = (status === 'all' || card.getAttribute('data-history-status') === status) ? '' : 'none';
+      });
+    });
+  });
+</script>
+{% endblock %}

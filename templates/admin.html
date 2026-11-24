@@ -1,0 +1,269 @@
+{% extends "dashboard_base.html" %}
+{% block title %}Admin Dashboard — FixNear{% endblock %}
+
+{% block dash_content %}
+
+<div class="dash-breadcrumb">
+  <a href="{{ url_for('home') }}">Home</a>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+  <span>Admin Overview</span>
+</div>
+
+<div class="dash-page-head reveal is-visible">
+  <div>
+    <h1>Platform Overview</h1>
+    <p>Everything happening across FixNear right now.</p>
+  </div>
+  <div class="dash-quick-actions">
+    <a href="#bookings" class="btn btn-outline btn-ripple">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      View Bookings
+    </a>
+  </div>
+</div>
+
+<!-- Platform stats -->
+<div class="dash-stat-grid reveal reveal-delay-1">
+  <div class="dash-stat-card tone-purple">
+    <div class="stat-top">
+      <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+      <span class="trend up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>Live</span>
+    </div>
+    <b class="stat-counter" data-counter="{{ stats.total_users }}">0</b>
+    <span class="stat-label">Total Users</span>
+  </div>
+  <div class="dash-stat-card tone-green">
+    <div class="stat-top">
+      <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+    </div>
+    <b class="stat-counter" data-counter="{{ stats.total_workers }}">0</b>
+    <span class="stat-label">Total Workers</span>
+  </div>
+  <div class="dash-stat-card tone-amber">
+    <div class="stat-top">
+      <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></div>
+    </div>
+    <b class="stat-counter" data-counter="{{ stats.total_jobs }}">0</b>
+    <span class="stat-label">Total Jobs</span>
+  </div>
+  <div class="dash-stat-card tone-red">
+    <div class="stat-top">
+      <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+    </div>
+    <b class="stat-counter" data-counter="{{ stats.pending_jobs }}">0</b>
+    <span class="stat-label">Pending Jobs</span>
+  </div>
+</div>
+
+<!-- Charts -->
+<div class="dash-grid-2 reveal reveal-delay-2">
+  <div class="chart-placeholder">
+    <div class="chart-placeholder-head">
+      <h4>Jobs Posted per Month</h4>
+      <span class="hint" style="margin: 0;">Placeholder data</span>
+    </div>
+    <div class="chart-bars">
+      <div class="bar" style="height: 35%;"></div>
+      <div class="bar" style="height: 55%; animation-delay: .05s;"></div>
+      <div class="bar" style="height: 40%; animation-delay: .1s;"></div>
+      <div class="bar" style="height: 70%; animation-delay: .15s;"></div>
+      <div class="bar" style="height: 50%; animation-delay: .2s;"></div>
+      <div class="bar" style="height: 85%; animation-delay: .25s;"></div>
+      <div class="bar" style="height: 65%; animation-delay: .3s;"></div>
+      <div class="bar" style="height: 95%; animation-delay: .35s;"></div>
+    </div>
+  </div>
+
+  <div class="chart-placeholder">
+    <div class="chart-placeholder-head"><h4>Users by Role</h4></div>
+    <div class="chart-donut">
+      <svg viewBox="0 0 36 36">
+        <circle cx="18" cy="18" r="15.9" fill="none" stroke="var(--line)" stroke-width="4"></circle>
+        <circle cx="18" cy="18" r="15.9" fill="none" stroke="url(#g1)" stroke-width="4"
+          stroke-dasharray="{{ (stats.total_customers / stats.total_users * 100) if stats.total_users else 0 }}, 100"
+          stroke-linecap="round" transform="rotate(-90 18 18)"></circle>
+        <defs><linearGradient id="g1"><stop offset="0%" stop-color="#7c5cff"/><stop offset="100%" stop-color="#22d3ee"/></linearGradient></defs>
+      </svg>
+      <div class="chart-donut-legend">
+        <span><span class="swatch" style="background: var(--grad-brand);"></span>{{ stats.total_customers }} Customers</span>
+        <span><span class="swatch" style="background: var(--line);"></span>{{ stats.total_workers }} Workers</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Recent registrations + recent work requests -->
+<div class="dash-grid-2 reveal reveal-delay-2">
+  <div class="dash-card">
+    <div class="dash-card-head"><h3>Recent Work Requests</h3><a href="#jobs" class="link-muted">View all</a></div>
+    {% if recent_jobs %}
+    <div class="dash-table-wrap">
+      <table class="dash-table" id="jobs">
+        <thead><tr><th>Customer</th><th>Category</th><th>Location</th><th>Status</th></tr></thead>
+        <tbody>
+          {% for job in recent_jobs %}
+          <tr>
+            <td><div class="cell-user"><span class="mini-avatar">{{ job['customer_name'][0]|upper }}</span>{{ job['customer_name'] }}</div></td>
+            <td>{{ job['category'] }}</td>
+            <td>{{ job['location'] }}</td>
+            <td><span class="status-badge status-{{ job['status']|lower }}"><span class="dot"></span>{{ job['status'] }}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="review-placeholder"><p>No work requests posted yet.</p></div>
+    {% endif %}
+  </div>
+
+  <div class="dash-card">
+    <div class="dash-card-head"><h3>Recent Registrations</h3></div>
+    {% if recent_users %}
+    <div style="display: flex; flex-direction: column; gap: 4px;">
+      {% for u in recent_users %}
+      <div class="activity-item">
+        <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+        <div>
+          <b>{{ u['full_name'] }}</b>
+          <span>{{ u['role']|capitalize }} · {{ u['created_at'][:10] }}</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="review-placeholder"><p>No registrations yet.</p></div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Users management -->
+<div class="dash-card" id="users">
+  <div class="dash-card-head">
+    <h3>User Management</h3>
+    <div class="search-shell" style="flex: 0 0 240px; box-shadow: none;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="Search users…" data-table-search="users-table">
+    </div>
+  </div>
+  {% if all_users %}
+  <div class="dash-table-wrap">
+    <table class="dash-table" id="users-table">
+      <thead><tr><th>User</th><th>Email</th><th>Role</th><th>Category</th><th>Joined</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for u in all_users %}
+        <tr>
+          <td><div class="cell-user"><span class="mini-avatar">{{ u['full_name'][0]|upper }}</span>{{ u['full_name'] }}</div></td>
+          <td>{{ u['email'] }}</td>
+          <td><span class="status-badge {% if u['role'] == 'admin' %}status-accepted{% elif u['role'] == 'worker' %}status-completed{% else %}status-open{% endif %}">{{ u['role']|capitalize }}</span></td>
+          <td>{{ u['service_category'] or '—' }}</td>
+          <td>{{ u['created_at'][:10] }}</td>
+          <td class="actions-cell">
+            <button type="button" class="table-icon-btn" title="View (coming soon)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+            <button type="button" class="table-icon-btn danger" title="Suspend (coming soon)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="pagination-placeholder">
+    <button class="active">1</button><button>2</button><button>3</button>
+  </div>
+  {% else %}
+  <div class="review-placeholder"><p>No users registered yet.</p></div>
+  {% endif %}
+</div>
+
+<!-- Category management -->
+<div class="dash-card" id="categories">
+  <div class="dash-card-head"><h3>Category Management</h3><span class="link-muted">{{ category_counts|length }} active categories</span></div>
+  {% if category_counts %}
+  <div class="category-mgmt-list">
+    {% for cat in category_counts %}
+    <div class="category-mgmt-item">
+      <div class="cat-name">
+        <span class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span>
+        {{ cat['service_category'] }}
+      </div>
+      <span class="cat-count">{{ cat['worker_count'] }} worker{{ 's' if cat['worker_count'] != 1 else '' }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="review-placeholder"><p>No worker categories yet — they'll appear as workers register.</p></div>
+  {% endif %}
+</div>
+
+<!-- Reports / moderation -->
+<div class="dash-grid-2">
+  <div class="dash-card" id="reports">
+    <div class="dash-card-head"><h3>Reports & Moderation</h3></div>
+    <div class="review-placeholder">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      <p>No spam or fake-listing reports at this time.</p>
+    </div>
+  </div>
+
+  <div class="dash-card">
+    <div class="dash-card-head"><h3>Quick Stats</h3></div>
+    <div style="display: flex; flex-direction: column; gap: 14px;">
+      <div class="summary-row" style="color: var(--muted);"><span>Accepted Jobs</span><b style="color: var(--ink); font-family: var(--font-mono);">{{ stats.accepted_jobs }}</b></div>
+      <div class="summary-row" style="color: var(--muted);"><span>Completed Jobs</span><b style="color: var(--ink); font-family: var(--font-mono);">{{ stats.completed_jobs }}</b></div>
+      <div class="summary-row" style="color: var(--muted);"><span>Pending Bookings (legacy)</span><b style="color: var(--ink); font-family: var(--font-mono);">{{ stats.pending_bookings }}</b></div>
+    </div>
+  </div>
+</div>
+
+<!-- Legacy bookings (worker-booking system) -->
+<div class="dash-card" id="bookings">
+  <div class="dash-card-head">
+    <h3>Worker Bookings</h3>
+    <span class="link-muted">{{ bookings|length }} total</span>
+  </div>
+
+  {% if bookings %}
+  <div class="dash-table-wrap">
+    <table class="dash-table">
+      <thead><tr><th>Customer</th><th>Worker</th><th>Work Type</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for booking in bookings %}
+        <tr>
+          <td><div class="cell-user"><span class="mini-avatar">{{ booking["customer_name"][0]|upper }}</span>{{ booking["customer_name"] }}</div></td>
+          <td>{{ booking["worker_name"] }}</td>
+          <td>{{ booking["work_type"] }}</td>
+          <td>{{ booking["service_date"] }} · {{ booking["service_time"] }}</td>
+          <td>
+            {% if booking["status"] == "Pending" %}
+              <span class="status-badge status-pending"><span class="dot"></span>Pending</span>
+            {% else %}
+              <span class="status-badge status-confirmed"><span class="dot"></span>Confirmed</span>
+            {% endif %}
+          </td>
+          <td class="actions-cell">
+            {% if booking["status"] == "Pending" %}
+            <a href="{{ url_for('confirm_booking', booking_id=booking['id']) }}" class="table-icon-btn" title="Confirm booking">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            </a>
+            {% endif %}
+            <a href="{{ url_for('delete_booking', booking_id=booking['id']) }}" class="table-icon-btn danger" title="Delete booking">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <div class="icon-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    </div>
+    <h3>No bookings yet</h3>
+    <p>New booking requests will appear here as customers book workers.</p>
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

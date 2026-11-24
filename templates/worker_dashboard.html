@@ -1,0 +1,201 @@
+{% extends "dashboard_base.html" %}
+{% block title %}Worker Dashboard — FixNear{% endblock %}
+
+{% block dash_content %}
+
+<div class="dash-breadcrumb">
+  <a href="{{ url_for('home') }}">Home</a>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+  <span>Worker Dashboard</span>
+</div>
+
+<div class="dash-page-head reveal is-visible">
+  <div>
+    <h1>Welcome back, {{ user['full_name'].split(' ')[0] }} 👋</h1>
+    <p>Here's your work summary for today.</p>
+  </div>
+  <div class="dash-quick-actions">
+    <div class="availability-toggle">
+      <span data-availability-label>Available for jobs</span>
+      <div class="availability-switch on"></div>
+    </div>
+    <a href="{{ url_for('find_work') }}" class="btn btn-accent btn-ripple">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Find Work
+    </a>
+  </div>
+</div>
+
+<!-- Job status hero cards -->
+<div class="job-status-grid reveal reveal-delay-1">
+  <div class="job-status-card st-open">
+    <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></div>
+    <b class="stat-counter" data-counter="{{ stats.available }}">0</b>
+    <span>New Jobs Available</span>
+  </div>
+  <div class="job-status-card st-accepted">
+    <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+    <b class="stat-counter" data-counter="{{ stats.accepted }}">0</b>
+    <span>Accepted Jobs</span>
+  </div>
+  <div class="job-status-card st-completed">
+    <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+    <b class="stat-counter" data-counter="{{ stats.completed }}">0</b>
+    <span>Completed Jobs</span>
+  </div>
+  <div class="job-status-card st-cancelled">
+    <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+    <b class="stat-counter" data-counter="4.8" data-decimals="1">0</b>
+    <span>Average Rating</span>
+  </div>
+</div>
+
+<div class="dash-grid-2">
+  <div>
+    <!-- New available jobs matching category -->
+    <div class="dash-card">
+      <div class="dash-card-head">
+        <h3>New Jobs Near You</h3>
+        <a href="{{ url_for('find_work') }}" class="link-muted">View all</a>
+      </div>
+
+      {% if available_jobs %}
+      <div class="job-grid" style="grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));">
+        {% for job in available_jobs[:4] %}
+        <div class="job-card">
+          {% if job['image_path'] %}
+          <div class="job-card-img"><img src="{{ url_for('static', filename='uploads/' + job['image_path']) }}" alt="{{ job['category'] }}"></div>
+          {% else %}
+          <div class="job-card-img placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div>
+          {% endif %}
+          <div class="job-card-body">
+            <div class="job-card-top">
+              <span class="job-category-tag">{{ job['category'] }}</span>
+              {% if job['budget'] %}<span class="job-budget">{{ job['budget'] }}</span>{% endif %}
+            </div>
+            <p class="job-desc">{{ job['description'][:80] }}{% if job['description']|length > 80 %}…{% endif %}</p>
+            <div class="job-meta-row">
+              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> {{ job['location'] }}</span>
+            </div>
+            <div class="job-card-footer">
+              <div class="job-poster">
+                <span class="mini-avatar">{{ job['customer_name'][0]|upper }}</span>
+                {{ job['customer_name'] }}
+              </div>
+            </div>
+            <div style="display: flex; gap: 8px; margin-top: 14px;">
+              <a href="{{ url_for('apply_job', job_id=job['id']) }}" class="btn btn-primary btn-ripple btn-sm" style="flex: 1;">Accept</a>
+              <button type="button" class="btn btn-outline btn-ripple btn-sm" data-reject-job="{{ job['id'] }}" style="flex: 1;">Reject</button>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="empty-state">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <h3>No new jobs right now</h3>
+        <p>We'll notify you as soon as a matching job is posted nearby.</p>
+        <a href="{{ url_for('find_work') }}" class="btn btn-accent btn-ripple">Browse All Jobs</a>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- My jobs table -->
+    <div class="dash-card" id="jobs">
+      <div class="dash-card-head"><h3>My Jobs</h3></div>
+      {% if jobs %}
+      <div class="dash-table-wrap">
+        <table class="dash-table">
+          <thead>
+            <tr><th>Customer</th><th>Category</th><th>Location</th><th>Date</th><th>Status</th><th>Actions</th></tr>
+          </thead>
+          <tbody>
+            {% for job in jobs %}
+            <tr>
+              <td>
+                <div class="cell-user">
+                  <span class="mini-avatar">{{ job['customer_name'][0]|upper }}</span>
+                  {{ job['customer_name'] }}
+                </div>
+              </td>
+              <td>{{ job['category'] }}</td>
+              <td>{{ job['location'] }}</td>
+              <td>{{ job['preferred_date'] or '—' }}</td>
+              <td><span class="status-badge status-{{ job['status']|lower }}"><span class="dot"></span>{{ job['status'] }}</span></td>
+              <td class="actions-cell">
+                {% if job['status'] == 'Accepted' %}
+                <a href="{{ url_for('complete_job', job_id=job['id']) }}" class="table-icon-btn" title="Mark completed">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                </a>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="review-placeholder">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <p>No accepted jobs yet — browse Find Work to get started.</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div>
+    <!-- Profile widget -->
+    <div class="dash-card" style="text-align: center;">
+      <div class="profile-avatar-lg" style="margin: 0 auto 14px;">
+        {% if user['profile_photo'] %}
+          <img src="{{ url_for('static', filename='uploads/' + user['profile_photo']) }}" alt="{{ user['full_name'] }}">
+        {% else %}
+          {{ user['full_name'][0]|upper }}
+        {% endif %}
+      </div>
+      <h3 style="margin-bottom: 2px;">{{ user['full_name'] }}</h3>
+      <span class="profile-role-badge">{{ user['service_category'] or 'Worker' }}</span>
+      <div class="pro-stars" style="margin-top: 10px;">
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span>4.8</span>
+      </div>
+      <p style="font-size: 13px; margin: 10px 0 0;">{{ user['service_area'] or 'No service area set' }}</p>
+      <a href="{{ url_for('profile_edit') }}" class="btn btn-outline btn-ripple btn-sm btn-block" style="margin-top: 16px;">Edit Profile</a>
+    </div>
+
+    <!-- Earnings placeholder -->
+    <div class="dash-card" id="earnings">
+      <div class="dash-card-head"><h3>Monthly Earnings</h3></div>
+      <div class="chart-placeholder" style="border: none; padding: 0;">
+        <div class="chart-bars">
+          <div class="bar" style="height: 40%; animation-delay: .05s;"></div>
+          <div class="bar" style="height: 65%; animation-delay: .1s;"></div>
+          <div class="bar" style="height: 35%; animation-delay: .15s;"></div>
+          <div class="bar" style="height: 80%; animation-delay: .2s;"></div>
+          <div class="bar" style="height: 55%; animation-delay: .25s;"></div>
+          <div class="bar" style="height: 90%; animation-delay: .3s;"></div>
+          <div class="bar" style="height: 70%; animation-delay: .35s;"></div>
+        </div>
+      </div>
+      <p style="font-size: 12px; margin: 14px 0 0;">Earnings tracking will populate once payments are enabled.</p>
+    </div>
+
+    <!-- Reviews placeholder -->
+    <div class="dash-card">
+      <div class="dash-card-head"><h3>Reviews</h3></div>
+      <div class="review-placeholder">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <p>No reviews yet. They'll show up here after completed jobs.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

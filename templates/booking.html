@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}Book {{ worker.name }} — FixNear{% endblock %}
+
+{% block content %}
+<section class="section-tight">
+  <div class="shell">
+
+    <div class="section-head reveal is-visible" style="margin: 0 0 32px; text-align: left; max-width: none;">
+      <div class="eyebrow"><span class="dot"></span> Booking request</div>
+      <h2>Book {{ worker.name }}</h2>
+      <p>Fill in your details and we'll confirm the appointment.</p>
+    </div>
+
+    <div class="booking-layout">
+
+      <form method="POST" class="form-shell reveal is-visible">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="field-row">
+          <div class="field">
+            <label for="customer_name">Your name</label>
+            <div class="input-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <input type="text" id="customer_name" name="customer_name" placeholder="Enter your name" required>
+            </div>
+          </div>
+          <div class="field">
+            <label for="phone">Phone number</label>
+            <div class="input-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <input type="text" id="phone" name="phone" placeholder="Enter your phone number" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="service_date">Service date</label>
+            <div class="input-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <input type="date" id="service_date" name="service_date" required>
+            </div>
+          </div>
+          <div class="field">
+            <label for="service_time">Service time</label>
+            <div class="input-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <input type="time" id="service_time" name="service_time" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="field no-icon">
+          <label for="address">Address</label>
+          <textarea id="address" name="address" placeholder="Enter your full address" required></textarea>
+        </div>
+
+        <div class="field no-icon">
+          <label for="problem">Describe the problem</label>
+          <textarea id="problem" name="problem" placeholder="Tell us what needs fixing" required></textarea>
+        </div>
+
+        <div class="form-foot">
+          <button type="submit" class="btn btn-accent btn-ripple btn-block">
+            Confirm Booking
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          </button>
+        </div>
+      </form>
+
+      <div class="summary-card reveal reveal-delay-1 is-visible">
+        <div class="summary-inner">
+          <span class="ticket-id">TICKET · PENDING</span>
+          <div class="summary-worker">
+            <div class="worker-avatar">{{ worker.name[0]|upper }}</div>
+            <div>
+              <h4>{{ worker.name }}</h4>
+              <span>{{ worker.work }}</span>
+            </div>
+          </div>
+          <div class="summary-divider"></div>
+          <div class="summary-row"><span>Location</span><b>{{ worker.location }}</b></div>
+          <div class="summary-row"><span>Status</span><b>Awaiting details</b></div>
+          <div class="summary-price">
+            <span>Estimated rate</span>
+            <b>{{ worker.price }}</b>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="text-center" style="margin-top: 28px;">
+      <a href="{{ url_for('workers') }}" class="btn btn-outline btn-ripple">Back to Workers</a>
+    </div>
+
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+{% block title %}My Profile — FixNear{% endblock %}
+
+{% block content %}
+<section class="section-tight">
+  <div class="shell" style="max-width: 900px;">
+
+    <div class="profile-hero reveal is-visible">
+      <div class="profile-avatar-lg">
+        {% if user['profile_photo'] %}
+          <img src="{{ url_for('static', filename='uploads/' + user['profile_photo']) }}" alt="{{ user['full_name'] }}">
+        {% else %}
+          {{ user['full_name'][0]|upper }}
+        {% endif %}
+      </div>
+      <div class="profile-info">
+        <span class="profile-role-badge">{{ user['role'] }}</span>
+        <h2>{{ user['full_name'] }}</h2>
+        <div class="profile-meta-row">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 6 12 13 2 6"/><path d="M2 6h20v12H2z"/></svg> {{ user['email'] }}</span>
+          {% if user['phone'] %}<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> {{ user['phone'] }}</span>{% endif %}
+          {% if user['location'] %}<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> {{ user['location'] }}</span>{% endif %}
+          {% if user['service_area'] %}<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Serves {{ user['service_area'] }}</span>{% endif %}
+        </div>
+      </div>
+      <a href="{{ url_for('profile_edit') }}" class="btn btn-outline btn-ripple">
+        Edit Profile
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg>
+      </a>
+    </div>
+
+    <div class="dash-quick-actions reveal reveal-delay-1" style="margin-bottom: 24px;">
+      <a href="{{ url_for('work_history') }}" class="btn btn-ghost btn-ripple btn-sm">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        View History
+      </a>
+      {% if user['role'] == 'worker' %}
+      <a href="{{ url_for('saved_jobs') }}" class="btn btn-ghost btn-ripple btn-sm">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        Saved Jobs
+      </a>
+      {% endif %}
+      <a href="{{ url_for('notifications_center') }}" class="btn btn-ghost btn-ripple btn-sm">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        Notifications
+      </a>
+      <a href="{{ url_for('messages') }}" class="btn btn-ghost btn-ripple btn-sm">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Messages
+      </a>
+    </div>
+
+    <div class="profile-stats-grid reveal reveal-delay-1">
+      {% if user['role'] == 'worker' %}
+        <div class="stat-card">
+          <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <b>{{ stats.active_jobs }}</b>
+          <span>Active Jobs</span>
+        </div>
+        <div class="stat-card">
+          <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+          <b>{{ stats.completed_jobs }}</b>
+          <span>Completed Jobs</span>
+        </div>
+      {% else %}
+        <div class="stat-card">
+          <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+          <b>{{ stats.posted_jobs }}</b>
+          <span>Jobs Posted</span>
+        </div>
+        <div class="stat-card">
+          <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+          <b>{{ stats.completed_jobs }}</b>
+          <span>Completed</span>
+        </div>
+      {% endif %}
+    </div>
+
+    {% if user['role'] == 'worker' %}
+    <div class="profile-section reveal reveal-delay-2">
+      <h3>Skills & Service Info</h3>
+      <div class="skill-tags">
+        {% if user['service_category'] %}<span class="skill-tag">{{ user['service_category'] }}</span>{% endif %}
+        {% if user['experience'] %}<span class="skill-tag">{{ user['experience'] }} yrs experience</span>{% endif %}
+        {% if user['availability'] %}<span class="skill-tag">{{ user['availability'] }}</span>{% endif %}
+        {% if not user['service_category'] and not user['experience'] and not user['availability'] %}
+          <p style="margin:0;">No service details added yet — head to Edit Profile to add your skills.</p>
+        {% endif %}
+      </div>
+      {% if user['bio'] %}<p style="margin-top: 16px; margin-bottom: 0;">{{ user['bio'] }}</p>{% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Achievements / Badges -->
+    <div class="profile-section reveal reveal-delay-2">
+      <h3>Achievements</h3>
+      <div class="badge-row">
+        {% if stats.completed_jobs and stats.completed_jobs >= 1 %}
+        <span class="achievement-badge gold">
+          <span class="badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+          First Job {{ 'Completed' if user['role'] == 'worker' else 'Posted' }}
+        </span>
+        {% endif %}
+        {% if stats.completed_jobs and stats.completed_jobs >= 5 %}
+        <span class="achievement-badge gold">
+          <span class="badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+          5+ Jobs Completed
+        </span>
+        {% endif %}
+        {% if user['role'] == 'worker' %}
+        <span class="achievement-badge">
+          <span class="badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+          Quick Responder
+        </span>
+        <span class="achievement-badge">
+          <span class="badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0 5.4 5.4 0 0 0 0 7.65l8.42 8.42 8.42-8.42a5.4 5.4 0 0 0 0-7.65z"/></svg></span>
+          Verified Worker
+        </span>
+        {% else %}
+        <span class="achievement-badge">
+          <span class="badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0 5.4 5.4 0 0 0 0 7.65l8.42 8.42 8.42-8.42a5.4 5.4 0 0 0 0-7.65z"/></svg></span>
+          Trusted Customer
+        </span>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="profile-section reveal reveal-delay-2">
+      <h3>Ratings & Reviews</h3>
+      {% if reviews %}
+      <div class="rating-overview" style="margin-bottom: 24px;">
+        <div class="rating-big">
+          <b>{{ average_rating }}</b>
+          <div class="pro-stars">
+            {% for i in range(5) %}
+            <svg viewBox="0 0 24 24" {% if i >= average_rating|round(0, 'floor') %}style="color: var(--line);"{% endif %}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            {% endfor %}
+          </div>
+          <span>Based on {{ reviews|length }} review{{ 's' if reviews|length != 1 else '' }}</span>
+        </div>
+        <div class="rating-bars">
+          {% for star, pct in rating_breakdown.items() %}
+          <div class="rating-bar-row">{{ star }} <div class="bar-track"><div class="bar-fill" style="width: {{ pct }}%;"></div></div> {{ pct }}%</div>
+          {% endfor %}
+        </div>
+      </div>
+
+      {% for review in reviews %}
+      <div class="review-card" {% if loop.last %}style="margin-bottom: 0;"{% endif %}>
+        <div class="review-card-head">
+          <span class="mini-avatar">{{ review.reviewer.full_name[0]|upper }}</span>
+          <div><b>{{ review.reviewer.full_name }}</b><span>{{ review.created_at[:10] }}</span></div>
+          <div class="pro-stars">
+            {% for i in range(5) %}
+            <svg viewBox="0 0 24 24" {% if i >= review.rating %}style="color: var(--line);"{% endif %}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            {% endfor %}
+          </div>
+        </div>
+        {% if review.body %}<p>{{ review.body }}</p>{% endif %}
+        <div class="review-card-foot">
+          <button type="button" class="helpful-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3z"/></svg>
+            Helpful (<span data-helpful-count>0</span>)
+          </button>
+        </div>
+      </div>
+      {% endfor %}
+      {% else %}
+      <div class="review-placeholder">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <p>No reviews yet. Reviews will appear here after completed jobs.</p>
+      </div>
+      {% endif %}
+      <button type="button" class="btn btn-outline btn-ripple btn-sm" data-open-modal="writeReviewModal" style="margin-top: 16px;">Write a Review</button>
+    </div>
+
+    {% if user['role'] == 'worker' %}
+    <div class="profile-section reveal reveal-delay-3">
+      <h3>Portfolio</h3>
+      <div class="portfolio-grid">
+        <div class="portfolio-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div>
+        <div class="portfolio-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div>
+        <div class="portfolio-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg></div>
+        <div class="portfolio-tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+      </div>
+      <p class="hint" style="margin-top: 12px; margin-bottom: 0;">Upload photos of completed work to build your portfolio — coming soon.</p>
+    </div>
+
+    <div class="profile-section reveal reveal-delay-3">
+      <h3>Certificates</h3>
+      <div class="certificate-item">
+        <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a7 7 0 1 0 0-14 7 7 0 0 0 0 14z"/><path d="M8.21 13.89 7 23l5-3 5 3-1.21-9.12"/></svg></div>
+        <div><b>Trade Verification</b><span>Pending upload</span></div>
+      </div>
+      <p class="hint" style="margin: 0;">Add licenses or certifications to build customer trust — coming soon.</p>
+    </div>
+    {% endif %}
+
+    <div class="profile-section reveal reveal-delay-3">
+      <h3>Recent Activity</h3>
+      {% if recent_activity %}
+        {% for job in recent_activity %}
+        <div class="activity-item">
+          <div class="icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <div>
+            <b>{{ job['category'] }} — {{ job['status'] }}</b>
+            <span>{{ job['location'] }} · {{ job['created_at'][:10] }}</span>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+      <div class="review-placeholder">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <p>No activity yet. {% if user['role'] == 'worker' %}Browse <a href="{{ url_for('find_work') }}" class="link-muted">Find Work</a> to accept your first job.{% else %}<a href="{{ url_for('post_work') }}" class="link-muted">Post a job</a> to get started.{% endif %}</p>
+      </div>
+      {% endif %}
+    </div>
+
+  </div>
+</section>
+
+<!-- Write Review modal -->
+<div class="modal-overlay" id="writeReviewModal">
+  <div class="modal-box">
+    <button type="button" class="modal-close" aria-label="Close dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <h3 style="text-align: center;">Write a Review</h3>
+    <p style="font-size: 13.5px; text-align: center;">Share your experience working with {{ user['full_name'] }}.</p>
+    <div class="modal-star-picker">
+      <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+    </div>
+    <form data-inline-toast-form>
+      <div class="field no-icon"><textarea placeholder="Tell others about your experience…" required style="min-height: 90px;"></textarea></div>
+      <button type="submit" class="btn btn-primary btn-ripple btn-block">Submit Review</button>
+      <div class="toast-inline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Thanks for the feedback! Reviews sync once the backend is connected.</div>
+    </form>
+  </div>
+</div>
+{% endblock %}

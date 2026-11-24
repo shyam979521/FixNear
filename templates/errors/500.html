@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Something Went Wrong — FixNear{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="shell">
+    <div class="empty-state reveal is-visible" style="max-width: 480px; margin: 0 auto;">
+      <div class="icon-wrap" style="width: 96px; height: 96px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+      <div class="eyebrow" style="justify-content: center;"><span class="dot"></span> 500</div>
+      <h3>Something went wrong</h3>
+      <p>An unexpected error occurred on our end. It's been logged and we're on it — please try again shortly.</p>
+      <div class="hero-actions" style="justify-content: center;">
+        <a href="{{ url_for('home') }}" class="btn btn-accent btn-ripple">Back to Home</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

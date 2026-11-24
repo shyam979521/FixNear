@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Find Workers — FixNear{% endblock %}
+
+{% block content %}
+<section class="section-tight">
+  <div class="shell">
+
+    <div class="section-head reveal is-visible" style="margin-bottom: 40px;">
+      <div class="eyebrow"><span class="dot"></span> {{ workers|length }} worker{{ 's' if workers|length != 1 else '' }} available</div>
+      <h2>Available Workers</h2>
+      <p>Search by name, trade or location to find the right person for the job.</p>
+    </div>
+
+    <div class="toolbar reveal is-visible">
+      <form class="search-shell" method="GET" action="{{ url_for('workers') }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" name="search" placeholder="Search by name, work, or location" value="{{ search }}">
+        <button type="submit" class="btn btn-primary btn-ripple btn-sm">Search</button>
+      </form>
+      <span class="result-count">{{ workers|length }} RESULT{{ 'S' if workers|length != 1 else '' }}</span>
+    </div>
+
+    {% set icon_map = [
+      ('electric', '<path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/>'),
+      ('plumb', '<path d="M14 4v6l3 3-6 6-3-3H2V4h12z"/><path d="M18 8h4v12h-4z"/>'),
+      ('carpent', '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>'),
+      ('paint', '<path d="M18.37 2.63 14 7l-1.59-1.59a2 2 0 0 0-2.82 0L8 7l9 9 1.59-1.59a2 2 0 0 0 0-2.82L17 10l4.37-4.37a2.12 2.12 0 1 0-3-3z"/><path d="M9 8c-2 3-4 3.5-7 4l8 8c2.5-2 3-4 4-7"/>'),
+      ('furnitur', '<path d="M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3"/><path d="M2 11v5a1 1 0 0 0 1 1h1v3h2v-3h12v3h2v-3h1a1 1 0 0 0 1-1v-5a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/>'),
+      ('bike', '<circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/>'),
+      ('car', '<path d="M14 16.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/><path d="M4.5 16.5h-2v-5l2-5h10l3.5 5H21v5h-2"/><path d="M17 16.5h-3"/>'),
+      ('clean', '<path d="M3 3l3 3"/><path d="M14 6l7 7-8 8-7-7z"/><path d="M6 6 17.5 17.5"/>'),
+      ('ac', '<path d="M12 2v20"/><path d="M2 12h20"/><path d="M20 16 4 8"/><path d="M4 16 20 8"/>'),
+      ('appliance', '<rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="7" x2="16" y2="7"/><circle cx="12" cy="15" r="3"/>')
+    ] %}
+    {% set default_icon = '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>' %}
+
+    {% if workers %}
+    <div class="worker-grid">
+      {% for worker in workers %}
+      {% set ns = namespace(icon=default_icon) %}
+      {% set w_lower = worker.work|lower %}
+      {% for key, ic in icon_map %}
+        {% if key in w_lower %}{% set ns.icon = ic %}{% endif %}
+      {% endfor %}
+      <div class="worker-card reveal reveal-delay-{{ loop.index0 % 4 + 1 }}">
+        <span class="badge-available"><span class="pulse"></span> Available</span>
+        <div class="worker-top">
+          <div class="worker-avatar">{{ worker.name[0]|upper }}</div>
+          <div>
+            <h3 class="worker-name">{{ worker.name }}</h3>
+            <span class="worker-role">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">{{ ns.icon | safe }}</svg>
+              {{ worker.work }}
+            </span>
+          </div>
+        </div>
+        <div class="worker-meta">
+          <div class="row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0 5.4 5.4 0 0 0 0 7.65l8.42 8.42 8.42-8.42a5.4 5.4 0 0 0 0-7.65z"/></svg>
+            Price: <b>{{ worker.price }}</b>
+          </div>
+          <div class="row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            {{ worker.location }}
+          </div>
+        </div>
+        <a href="{{ url_for('book_worker', worker_id=worker.id) }}" class="btn btn-primary btn-ripple">
+          Book Now
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state reveal is-visible">
+      <div class="icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </div>
+      <h3>No workers found</h3>
+      <p>Try a different name, trade, or location — or check back soon as new workers join.</p>
+      <a href="{{ url_for('workers') }}" class="btn btn-outline btn-ripple">Clear search</a>
+    </div>
+    {% endif %}
+
+  </div>
+</section>
+{% endblock %}

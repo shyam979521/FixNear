@@ -1,0 +1,12 @@
+{
+  "name": "FixNear — Local Worker Booking & Job Marketplace",
+  "short_name": "FixNear",
+  "description": "Book verified local workers or find nearby jobs — electricians, plumbers, carpenters and more.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f7fb",
+  "theme_color": "#0c1330",
+  "icons": [
+    { "src": "/static/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

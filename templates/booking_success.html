@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Booking Confirmed — FixNear{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="shell">
+    <div class="success-shell reveal is-visible">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+      </div>
+      <div class="eyebrow"><span class="dot"></span> Booking received</div>
+      <h2>Thank you, {{ customer_name }}!</h2>
+      <p>Your request has been sent to <strong>{{ worker.name }}</strong>. We'll notify you once the booking is confirmed.</p>
+
+      <div class="success-ticket">
+        <div class="ticket-top">
+          <span class="ticket-id">TICKET · PENDING CONFIRMATION</span>
+          <span class="ticket-status"><span class="pulse"></span> Submitted</span>
+        </div>
+        <div class="ticket-worker">
+          <div class="ticket-avatar">{{ worker.name[0]|upper }}</div>
+          <div>
+            <h4>{{ worker.name }}</h4>
+            <span>{{ worker.work }} · {{ worker.location }}</span>
+          </div>
+        </div>
+        <div class="ticket-divider"></div>
+        <div class="ticket-row"><span>Date</span><b>{{ service_date }}</b></div>
+        <div class="ticket-row"><span>Time</span><b>{{ service_time }}</b></div>
+        <div class="ticket-row"><span>Address</span><b>{{ address }}</b></div>
+        <div class="ticket-row"><span>Problem</span><b>{{ problem }}</b></div>
+        <div class="ticket-divider"></div>
+        <div class="ticket-row"><span>Rate</span><b>{{ worker.price }}</b></div>
+      </div>
+
+      <div class="hero-actions" style="justify-content: center; margin-top: 32px;">
+        <a href="{{ url_for('workers') }}" class="btn btn-accent btn-ripple magnetic">Book Another Worker</a>
+        <a href="{{ url_for('home') }}" class="btn btn-outline btn-ripple magnetic">Back to Home</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

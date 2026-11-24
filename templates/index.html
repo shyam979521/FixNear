@@ -1,0 +1,362 @@
+{% extends "base.html" %}
+{% block title %}FixNear — Book Trusted Local Workers{% endblock %}
+
+{% block content %}
+
+<!-- ================================ HERO ================================ -->
+<section class="hero">
+  <div class="mesh-bg">
+    <div class="mesh-blob b1"></div>
+    <div class="mesh-blob b2"></div>
+    <div class="mesh-blob b3"></div>
+    <div class="light-ray r1"></div>
+    <div class="light-ray r2"></div>
+    <div class="light-ray r3"></div>
+  </div>
+  <div class="particle-field"></div>
+  <div class="noise-overlay"></div>
+
+  <div class="shell">
+    <div class="hero-grid">
+      <div class="reveal is-visible">
+        <div class="eyebrow"><span class="dot"></span> Trusted local help, on demand</div>
+        <h1>Book a nearby worker<br>in <span class="grad-text">under a minute.</span></h1>
+        <p class="lead">Electricians, plumbers, carpenters, painters and more — verified locals ready to fix your problem today, not next week.</p>
+
+        <form class="dispatch-bar glass-card" action="{{ url_for('workers') }}" method="GET" data-dispatch-form>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" name="search" data-rotate-placeholder placeholder='Search "Electrician" near you' autocomplete="off">
+          <button type="submit" class="btn btn-accent btn-ripple">
+            Search
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+        </form>
+
+        <div class="hero-actions">
+          <a href="{{ url_for('workers') }}" class="btn btn-primary btn-ripple magnetic">Browse All Workers</a>
+          <a href="{{ url_for('register_worker') }}" class="btn btn-outline btn-ripple magnetic">Register as a Worker</a>
+        </div>
+
+        <div class="trust-row">
+          <span class="trust-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Verified workers</span>
+          <span class="trust-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Same-day booking</span>
+          <span class="trust-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Transparent pricing</span>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat"><b class="stat-counter" data-counter="500" data-suffix="+">0</b><span>Verified workers</span></div>
+          <div class="stat"><b class="stat-counter" data-counter="12000" data-suffix="+">0</b><span>Jobs completed</span></div>
+          <div class="stat"><b class="stat-counter" data-counter="4.8" data-suffix=" ★" data-decimals="1">0</b><span>Average rating</span></div>
+        </div>
+      </div>
+
+      <div class="hero-visual reveal reveal-delay-2 is-visible">
+        <div class="ticket-card">
+          <div class="ticket-top">
+            <span class="ticket-id">TICKET #A-1042</span>
+            <span class="ticket-status"><span class="pulse"></span> Available now</span>
+          </div>
+          <div class="ticket-worker">
+            <div class="ticket-avatar">R</div>
+            <div>
+              <h4>Ramesh</h4>
+              <span>Plumber · Lucknow</span>
+            </div>
+          </div>
+          <div class="ticket-divider"></div>
+          <div class="ticket-row"><span>Service</span><b>Pipe Leak Fix</b></div>
+          <div class="ticket-row"><span>ETA</span><b>32 min</b></div>
+          <div class="ticket-row"><span>Rate</span><b>₹300</b></div>
+        </div>
+        <div class="float-chip chip-1 glass-card">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          Verified worker
+        </div>
+        <div class="float-chip chip-2 glass-card">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Same-day booking
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ SERVICE CATEGORIES ============================ -->
+<section class="section">
+  <div class="shell">
+    <div class="section-head reveal">
+      <div class="eyebrow"><span class="dot"></span> Popular services</div>
+      <h2>What can we fix for you today?</h2>
+      <p>Tap a category to see nearby workers instantly.</p>
+    </div>
+
+    {% set services = [
+      ("Electrician", "Wiring, switchboards, fittings & repairs", '<path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/>', "Popular"),
+      ("Plumber", "Leaks, pipe fitting & bathroom fixtures", '<path d="M14 4v6l3 3-6 6-3-3H2V4h12z"/><path d="M18 8h4v12h-4z"/>', "Popular"),
+      ("Carpenter", "Furniture repair, fittings & woodwork", '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>', none),
+      ("Painter", "Interior, exterior & touch-up painting", '<path d="M18.37 2.63 14 7l-1.59-1.59a2 2 0 0 0-2.82 0L8 7l9 9 1.59-1.59a2 2 0 0 0 0-2.82L17 10l4.37-4.37a2.12 2.12 0 1 0-3-3z"/><path d="M9 8c-2 3-4 3.5-7 4l8 8c2.5-2 3-4 4-7"/>', none),
+      ("Furniture Repair", "Fix, restore & reassemble furniture", '<path d="M20 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v3"/><path d="M2 11v5a1 1 0 0 0 1 1h1v3h2v-3h12v3h2v-3h1a1 1 0 0 0 1-1v-5a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/>', none),
+      ("Bike Repair", "Servicing, punctures & tune-ups", '<circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/>', none),
+      ("Car Repair", "Doorstep servicing & diagnostics", '<path d="M14 16.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/><path d="M4.5 16.5h-2v-5l2-5h10l3.5 5H21v5h-2"/><path d="M17 16.5h-3"/>', none),
+      ("Cleaning", "Deep cleaning for home & office", '<path d="M3 3l3 3"/><path d="M14 6l7 7-8 8-7-7z"/><path d="M6 6 17.5 17.5"/>', "New"),
+      ("AC Repair", "Installation, gas refill & servicing", '<path d="M12 2v20"/><path d="M2 12h20"/><path d="M20 16 4 8"/><path d="M4 16 20 8"/>', none)
+    ] %}
+
+    <div class="service-grid-premium">
+      {% for name, desc, icon, tag in services %}
+      <a href="{{ url_for('workers', search=name) }}" class="service-card-premium reveal reveal-delay-{{ loop.index0 % 4 + 1 }}">
+        {% if tag %}<span class="tag">{{ tag }}</span>{% endif %}
+        <div class="icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">{{ icon | safe }}</svg>
+        </div>
+        <h3>{{ name }}</h3>
+        <p>{{ desc }}</p>
+        <span class="go-arrow">
+          Find workers
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ============================== HOW IT WORKS ============================== -->
+<section class="section" style="background: var(--paper-dim);">
+  <div class="shell">
+    <div class="section-head reveal">
+      <div class="eyebrow"><span class="dot"></span> How it works</div>
+      <h2>From problem to fixed — four simple steps</h2>
+      <p>A straightforward flow that gets a real person to your door.</p>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-step reveal reveal-delay-1">
+        <div class="timeline-node">
+          <span class="timeline-num">1</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+        </div>
+        <h3>Post Your Work</h3>
+        <p>Describe the problem and pick a category — takes less than a minute.</p>
+      </div>
+      <div class="timeline-step reveal reveal-delay-2">
+        <div class="timeline-node">
+          <span class="timeline-num">2</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <h3>Nearby Workers Receive Request</h3>
+        <p>Verified local workers in your area get notified instantly.</p>
+      </div>
+      <div class="timeline-step reveal reveal-delay-3">
+        <div class="timeline-node">
+          <span class="timeline-num">3</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        </div>
+        <h3>Worker Accepts</h3>
+        <p>Your chosen worker confirms the booking and heads your way.</p>
+      </div>
+      <div class="timeline-step reveal reveal-delay-4">
+        <div class="timeline-node">
+          <span class="timeline-num">4</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+        </div>
+        <h3>Work Gets Completed</h3>
+        <p>Sit back while the job gets done — quick, reliable, hassle-free.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================ WHY CHOOSE US ================================ -->
+<section class="section">
+  <div class="shell">
+    <div class="section-head reveal">
+      <div class="eyebrow"><span class="dot"></span> Why FixNear</div>
+      <h2>Built for trust, speed and fair pricing</h2>
+      <p>Everything about the platform is designed around getting help you can rely on.</p>
+    </div>
+
+    {% set features = [
+      ("Verified Workers", "Every worker is checked before joining the platform.", '<path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0 5.4 5.4 0 0 0 0 7.65l8.42 8.42 8.42-8.42a5.4 5.4 0 0 0 0-7.65z"/>'),
+      ("Fast Response", "Most requests get a response within minutes.", '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>'),
+      ("Affordable Pricing", "Transparent, upfront rates — no hidden charges.", '<line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>'),
+      ("Trusted Professionals", "Skilled locals with real experience in their trade.", '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>'),
+      ("Real Reviews", "Feedback from real customers guides every booking.", '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>'),
+      ("Secure Platform", "Your details stay private and protected, always.", '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>')
+    ] %}
+
+    <div class="feature-grid">
+      {% for name, desc, icon in features %}
+      <div class="feature-card reveal reveal-delay-{{ loop.index0 % 4 + 1 }}">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">{{ icon | safe }}</svg>
+        </div>
+        <div>
+          <h3>{{ name }}</h3>
+          <p>{{ desc }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ============================== FEATURED WORKERS ============================== -->
+<section class="section" style="background: var(--paper-dim);">
+  <div class="shell">
+    <div class="section-head reveal">
+      <div class="eyebrow"><span class="dot"></span> Featured on FixNear</div>
+      <h2>Meet a few of our top-rated workers</h2>
+      <p>A small sample of the verified professionals ready to help nearby.</p>
+    </div>
+
+    {% set pros = [
+      ("Ramesh", "Plumber", "Lucknow", "4.9", "230", "6"),
+      ("Suresh", "Electrician", "Lucknow", "4.8", "310", "8"),
+      ("Amit", "Carpenter", "Barabanki", "4.7", "175", "5"),
+      ("Rahul", "Painter", "Lucknow", "4.9", "260", "7")
+    ] %}
+
+    <div class="pro-grid">
+      {% for name, role, loc, rating, jobs, exp in pros %}
+      <div class="pro-card reveal reveal-delay-{{ loop.index0 % 4 + 1 }}">
+        <div class="pro-banner"></div>
+        <div class="pro-avatar">{{ name[0] }}</div>
+        <h3>{{ name }}</h3>
+        <div class="pro-role">{{ role }}</div>
+        <div class="pro-stars">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <span>{{ rating }}</span>
+        </div>
+        <div class="pro-stats-row">
+          <div><b>{{ jobs }}+</b><span>Jobs</span></div>
+          <div><b>{{ exp }}yr</b><span>Experience</span></div>
+        </div>
+        <div class="pro-location">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          {{ loc }}
+        </div>
+        <a href="{{ url_for('workers', search=name) }}" class="btn btn-outline btn-ripple btn-sm btn-block">View Profile</a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ================================ TESTIMONIALS ================================ -->
+<section class="section">
+  <div class="shell">
+    <div class="section-head reveal">
+      <div class="eyebrow"><span class="dot"></span> Customer stories</div>
+      <h2>Loved by people who just wanted things fixed</h2>
+      <p>Real feedback from customers who booked through FixNear.</p>
+    </div>
+
+    {% set testimonials = [
+      ("Priya Sharma", "Gomti Nagar, Lucknow", "Booked an electrician in the evening and he arrived within the hour. Fixed the wiring issue quickly and the price matched what was shown."),
+      ("Ankit Verma", "Indira Nagar, Lucknow", "The plumber was professional and explained the leak before starting work. No surprise charges — exactly what I needed."),
+      ("Neha Gupta", "Barabanki", "Furniture repair looked brand new after Amit was done. Booking took under two minutes on my phone."),
+      ("Rohit Singh", "Hazratganj, Lucknow", "Painter finished the room in a single day, clean and tidy. Would book again without a second thought."),
+      ("Sana Khan", "Aliganj, Lucknow", "Loved how simple the search was — typed 'AC repair' and had a worker booked in minutes.")
+    ] %}
+
+    <div class="testimonial-track-wrap reveal">
+      <div class="testimonial-track" data-testimonial-track>
+        {% for name, loc, quote in testimonials %}
+        <div class="testimonial-card">
+          <div class="testimonial-quote">&ldquo;</div>
+          <p class="quote-text">{{ quote }}</p>
+          <div class="testimonial-person">
+            <div class="testimonial-avatar">{{ name[0] }}</div>
+            <div>
+              <h4>{{ name }}</h4>
+              <span>{{ loc }}</span>
+            </div>
+          </div>
+          <div class="testimonial-stars">
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="carousel-dots" data-testimonial-dots></div>
+  </div>
+</section>
+
+<!-- ==================================== FAQ ==================================== -->
+<section class="section" style="background: var(--paper-dim);">
+  <div class="shell">
+    <div class="section-head reveal">
+      <div class="eyebrow"><span class="dot"></span> FAQ</div>
+      <h2>Questions, answered</h2>
+      <p>Everything you need to know before your first booking.</p>
+    </div>
+
+    <div class="faq-list reveal">
+      <div class="faq-item">
+        <button class="faq-question">
+          How quickly can a worker arrive?
+          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">Most bookings are confirmed within minutes, and workers typically arrive the same day depending on availability in your area.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          Are the workers verified?
+          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">Yes — every worker profile listed on FixNear goes through a review before appearing in search results.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          How is pricing decided?
+          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">Each worker sets a transparent rate shown up front on their profile — the price you see is the price you pay.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          Can I cancel or reschedule a booking?
+          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">Yes, reach out through the booking confirmation details and the worker will accommodate the change where possible.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          How do I become a worker on FixNear?
+          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">Use the "Register as Worker" button to list your trade, price and location — you'll appear in search within moments.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =============================== FINAL CTA =============================== -->
+<section class="section-tight">
+  <div class="shell">
+    <div class="cta-premium reveal">
+      <div class="mesh-bg">
+        <div class="mesh-blob b1"></div>
+        <div class="mesh-blob b2"></div>
+      </div>
+      <h2>Got a job that needs doing?</h2>
+      <p>Browse verified local workers or list your own services in less than two minutes.</p>
+      <div class="hero-actions">
+        <a href="{{ url_for('workers') }}" class="btn btn-accent btn-ripple magnetic">Find a Worker</a>
+        <a href="{{ url_for('register_worker') }}" class="btn btn-ghost btn-ripple magnetic" style="background: rgba(255,255,255,.1); color: #fff; border-color: rgba(255,255,255,.2);">Register as Worker</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

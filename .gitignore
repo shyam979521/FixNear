@@ -1,0 +1,20 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+instance/*.db
+logs/*.log
+.vscode/
+.DS_Store
+*.egg-info/
+
+# Local database
+workers.db
+
+# User uploaded files
+static/uploads/*
+!static/uploads/.gitkeep
+
+# Local AI assistant configuration
+.claude/
